@@ -1,5 +1,5 @@
-const UserSchema = (sequelize, DataTypes) => {
-  const UserTable = sequelize.define('User', {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,14 +17,12 @@ const UserSchema = (sequelize, DataTypes) => {
     },
   );
 
-  UserTable.associate = (models) => {
-    UserTable.hasMany(models.BlogPostTable, {
-      as: 'blogPosts',
-      foreignKey: 'userId',
-    });
-  };
+  // User.associate = (models) => {
+  //   User.hasMany(models.BlogPostTable, {
+  //     as: 'blogPosts',
+  //     foreignKey: 'userId',
+  //   });
+  // };
 
-  return UserTable;
+  return User;
 };
-
-module.exports = UserSchema;
