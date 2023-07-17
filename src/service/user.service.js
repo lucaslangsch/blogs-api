@@ -8,6 +8,7 @@ const signIn = async (email, password) => {
   }
 
   const user = await User.findOne({ where: { email } });
+
   if (!user || user.password !== password) {
     return { status: 'BAD_REQUEST', data: { message: 'Invalid fields' } };
   }
@@ -19,6 +20,23 @@ const signIn = async (email, password) => {
   return { status: 'SUCCESSFUL', data: { token } };
 };
 
+const signUp = async (displayName, email, password, image) => {
+  const userExist = await User.findOne({ where: { email } });
+  if (userExist) {
+    return { status: 'CONFLICT', data: { message: 'User already registered' } };
+  }
+
+  const newUser = await User.create({ displayName, email, password, image });
+
+  const { password: _password, ...userWithoutPassword } = newUser.dataValues;
+
+  const payload = { data: userWithoutPassword };
+  const token = createToken(payload);
+
+  return { status: 'CREATED', data: { token } };
+};
+
 module.exports = {
   signIn,
+  signUp,
 };
