@@ -7,6 +7,12 @@ const signUp = async (req, res) => {
   res.status(mapStatusHTTP(status)).json(data);
 };
 
+const getAllUser = async (req, res) => {
+  const { status, data } = await signInService.getAllUser();
+  res.status(mapStatusHTTP(status)).json(data);
+};
+
 module.exports = {
   signUp,
+  getAllUser,
 };
