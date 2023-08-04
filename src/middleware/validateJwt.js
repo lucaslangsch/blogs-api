@@ -1,20 +1,21 @@
 const { getPayload } = require('../auth/authFunction');
 
+const getToken = (authorization) => {
+  if (authorization.includes('Bearer')) {
+    return authorization.split(' ')[1];
+  }
+  return authorization;
+};
+
 const validateJwt = (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    let token;
-    if (authorization.includes('Bearer')) {
-      token = authorization.split(' ')[1];
-    } else {
-      token = authorization;
-    }
+    const token = getToken(authorization);
     if (!authorization) {
       return res.status(401).json({
         message: 'Token not found',
       });
     }
-  
     const payload = getPayload(token);
     req.payload = payload;
     next();
