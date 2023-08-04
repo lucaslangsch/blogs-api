@@ -55,8 +55,30 @@ const getPost = async (id) => {
   return { status: 'SUCCESSFUL', data: post };
 };
 
+const updatePost = async (id, title, content, userId) => {
+  const result = await sequelize.transaction(async (t) => {
+    console.log(id, userId);
+    const [updatedRows] = await BlogPost.update(
+      { title, content },
+      // { include: [
+      //   { model: User, as: 'user', attributes: { exclude: 'password' } } ]},
+      { where: { id, userId } },
+      {
+        transaction: t,
+      },
+    );
+    if (updatedRows === 0) {
+      return { status: 'UNAUTHORIZED', data: { message: 'Unauthorized user' } };
+    }
+
+    return getPost(id);
+  });
+  return result;
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPost,
+  updatePost,
 };

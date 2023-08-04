@@ -23,8 +23,21 @@ const getPost = async (req, res) => {
   res.status(mapStatusHTTP(status)).json(data);
 };
 
+const updatePost = async (req, res) => {
+  const { authorization } = req.headers;
+  const token = authorization.split(' ')[1];
+  const payload = getPayload(token);
+  const userId = payload.id;
+
+  const { id } = req.params;
+  const { title, content } = req.body;
+  const { status, data } = await postService.updatePost(id, title, content, userId);
+  res.status(mapStatusHTTP(status)).json(data);
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPost,
+  updatePost,
 };
