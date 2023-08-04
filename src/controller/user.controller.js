@@ -18,8 +18,15 @@ const getUserById = async (req, res) => {
   res.status(mapStatusHTTP(status)).json(data);
 };
 
+const deleteUser = async (req, res) => {
+  const { id } = req.payload;
+  const { status, data } = await signInService.deleteUser(id);
+  res.status(mapStatusHTTP(status)).json(data);
+};
+
 module.exports = {
   signUp,
   getAllUser,
   getUserById,
+  deleteUser,
 };

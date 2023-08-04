@@ -8,5 +8,6 @@ const validateJwt = require('../middleware/validateJwt');
 route.post('/user', validateDisplayName, validateEmail, validatePassword, userController.signUp);
 route.get('/user', validateJwt, userController.getAllUser);
 route.get('/user/:id', validateJwt, userController.getUserById);
+route.delete('/user/me', validateJwt, userController.deleteUser);
 
 module.exports = route;
