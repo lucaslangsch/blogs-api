@@ -13,5 +13,6 @@ route.post(
 route.get('/post', validateJwt, postController.getAllPosts);
 route.get('/post/:id', validateJwt, postController.getPost);
 route.put('/post/:id', validateJwt, validatePostToUpdate, postController.updatePost);
+route.delete('/post/:id', validateJwt, postController.deletePost);
 
 module.exports = route;

@@ -57,11 +57,8 @@ const getPost = async (id) => {
 
 const updatePost = async (id, title, content, userId) => {
   const result = await sequelize.transaction(async (t) => {
-    console.log(id, userId);
     const [updatedRows] = await BlogPost.update(
       { title, content },
-      // { include: [
-      //   { model: User, as: 'user', attributes: { exclude: 'password' } } ]},
       { where: { id, userId } },
       {
         transaction: t,
@@ -76,9 +73,25 @@ const updatePost = async (id, title, content, userId) => {
   return result;
 };
 
+const deletePost = async (id, userId) => {
+  const post = await BlogPost.findByPk(id);
+  // console.log('id: ', id);
+  // console.log('userId: ', userId);
+  // console.log(post);
+  if (!post) {
+    return { status: 'NOT_FOUND', data: { message: 'Post does not exist' } };
+  }
+  if (post.userId !== userId) {
+    return { status: 'UNAUTHORIZED', data: { message: 'Unauthorized user' } };
+  }
+  await BlogPost.destroy({ where: { id } });
+  return { status: 'NO_CONTENT', data: {} };
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPost,
   updatePost,
+  deletePost,
 };

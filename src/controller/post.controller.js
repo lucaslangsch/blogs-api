@@ -24,14 +24,17 @@ const getPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-  const { authorization } = req.headers;
-  const token = authorization.split(' ')[1];
-  const payload = getPayload(token);
-  const userId = payload.id;
-
+  const userId = req.payload.id;
   const { id } = req.params;
   const { title, content } = req.body;
   const { status, data } = await postService.updatePost(id, title, content, userId);
+  res.status(mapStatusHTTP(status)).json(data);
+};
+
+const deletePost = async (req, res) => {
+  const userId = req.payload.id;
+  const { id } = req.params;
+  const { status, data } = await postService.deletePost(id, userId);
   res.status(mapStatusHTTP(status)).json(data);
 };
 
@@ -40,4 +43,5 @@ module.exports = {
   getAllPosts,
   getPost,
   updatePost,
+  deletePost,
 };
