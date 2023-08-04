@@ -2,11 +2,10 @@ const route = require('express').Router();
 const { categoryController } = require('../controller');
 const validateNameCategory = require('../middleware/validateNameCategory');
 const validateJwt = require('../middleware/validateJwt');
-const validateJwtBearer = require('../middleware/validateJwtCategory');
 
 route.post(
   '/categories',
-  validateJwtBearer,
+  validateJwt,
   validateNameCategory,
   categoryController.createCategory,
   );

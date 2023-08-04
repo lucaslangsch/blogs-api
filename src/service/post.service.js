@@ -75,9 +75,6 @@ const updatePost = async (id, title, content, userId) => {
 
 const deletePost = async (id, userId) => {
   const post = await BlogPost.findByPk(id);
-  // console.log('id: ', id);
-  // console.log('userId: ', userId);
-  // console.log(post);
   if (!post) {
     return { status: 'NOT_FOUND', data: { message: 'Post does not exist' } };
   }
