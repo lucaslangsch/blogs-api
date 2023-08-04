@@ -1,8 +1,23 @@
-const { Category, BlogPost, User } = require('../models');
+const { Category, BlogPost, User, sequelize } = require('../models');
 
-const createPost = async (name) => {
-  const newPost = await Category.create({ name });
-  return { status: 'CREATED', data: newPost };
+const createPost = async (id, title, content, categoryIds) => {
+  const result = await sequelize.transaction(async (t) => {
+    const existingCategories = await Category.findAll({
+      where: { id: categoryIds },
+    });
+    if (existingCategories.length !== categoryIds.length) {
+      return { status: 'BAD_REQUEST', data: { message: 'one or more "categoryIds" not found' } };
+    }
+    const newPost = await BlogPost.create(
+      { title, content, userId: id },
+      {
+        transaction: t,
+      },
+    );
+    await newPost.addCategories(categoryIds, { transaction: t });
+    return { status: 'CREATED', data: newPost };
+  });
+  return result;
 };
 
 const getAllPosts = async () => {
@@ -13,7 +28,7 @@ const getAllPosts = async () => {
         as: 'categories',
         through: {
           attributes:
-            { exclude: ['postId', 'categoryId'] },
+            [],
           },
         },
     ],
