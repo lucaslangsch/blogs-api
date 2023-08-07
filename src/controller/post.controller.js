@@ -38,10 +38,18 @@ const deletePost = async (req, res) => {
   res.status(mapStatusHTTP(status)).json(data);
 };
 
+const getPostByTerm = async (req, res) => {
+  const term = req.query.q;
+  console.log(term);
+  const { status, data } = await postService.getPostByTerm(term);
+  res.status(mapStatusHTTP(status)).json(data);
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPost,
   updatePost,
   deletePost,
+  getPostByTerm,
 };
